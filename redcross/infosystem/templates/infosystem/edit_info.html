@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>红十字会数据管理系统｜编辑资料</title>
+{% endblock %}
+{% block style %}
+    <style>
+        #Userinfo label {
+            font-size: 24px;
+
+        }
+
+        #Userinfo input {
+            font-size: 22px;
+            font-family: sans-serif;
+            height: 110%;
+        }
+
+        #panel_container {
+            margin-top: 15px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div id="panel_container" class="panel-default" style="background-color: #ffffff">
+                    <!--标题：编辑资料-->
+                    <div class="panel-heading" style="background-color: #ffffff">
+                        <h1>编辑资料</h1>
+                    </div>
+
+                    <!--内容：编辑资料-->
+                    <div class="panel-body" style="background-color: #ffffff">
+
+                        <form action="" method="post" enctype="multipart/form-data" role="form">
+                            {% csrf_token %}
+                            <div id="Userinfo" class="form-group">
+                                <!--用户名-->
+                                <div>
+                                    <label for="username">用户名 / Username</label>
+                                    <input id="username" class="form-control" name="username" type="text"
+                                           placeholder="{{ username }}" value="{{ username }}"
+                                           disabled>
+                                </div>
+                                <br><br>
+
+                                <!--邮箱-->
+                                <div>
+                                    <label for="user_email">新邮箱 / Email</label>
+                                    <input id="user_email" class="form-control" name="user_email" type="email"
+                                           placeholder="{{ user_email }}" value="{{ user_email }}"
+                                    >
+                                </div>
+                            </div>
+
+                <div align="center">
+                <button type="submit" class="btn btn-lg btn-primary" style="margin-bottom: 20px">提交 / Sumbit</button>
+                <button type="reset" class="btn  btn-lg btn-default" style="margin-bottom: 20px">重置 / Reset</button>
+
+</div>                        </form>
+
+                        <!--用户名-->
+                    </div>
+                </div>
+
+                <!--修改信息入口按钮-->
+            </div>
+        </div>
+    </div>
+{% endblock %}

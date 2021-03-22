@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>红十字会数据管理｜管理员界面</title>
+{% endblock %}
+{% block style %}
+
+    <style>
+        .container {
+            margin-top: 10px;
+        }
+
+        td, th {
+            text-align: center;
+        }
+
+        #UserInfo {
+            width: 100%;
+            height: 200%;
+            font-size: 140%;
+            border: 20px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+{% endblock %}
+
+
+{% block content %}
+    <!--统计数据可视化-->
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-10">
+                <!--物资表-->
+                <div id="Money" style="width: 1000px;height:600px;"></div>
+                <script type="text/javascript">
+                    var myChart = echarts.init(document.getElementById('Money'));
+
+                    // 指定图表的配置项和数据
+                    option = {
+                        title: {
+                            text: '物资接收与发放',
+                            subtext: '2020/01-2020-06'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['接收', '发放']
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                magicType: {show: true, type: ['line', 'bar']},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        calculable: true,
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: ['江苏', '浙江', '上海']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '接收',
+                                type: 'bar',
+                                data: [{{ JS_Res_Get }}, {{ ZJ_Res_Get }}, {{ SH_Res_Get }}],
+                                markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name: '发放',
+                                type: 'bar',
+                                data: [{{ JS_Res_Out }}, {{ ZJ_Res_Out }}, {{ SH_Res_Out }}],
+
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    myChart.setOption(option);
+
+
+                </script>
+            </div>
+            <div class="col-lg-10">
+                <!--款项表-->
+
+                <div id="Resource" style="width: 1000px;height:600px;"></div>
+                <script type="text/javascript">
+                    var myChart = echarts.init(document.getElementById('Resource'));
+                    option = {
+                        title: {
+                            text: '款项接收与发放',
+                            subtext: '2020/01-2020/06'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['接收', '发放']
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                dataView: {show: true, readOnly: false},
+                                magicType: {show: true, type: ['line', 'bar']},
+                                restore: {show: true},
+                                saveAsImage: {show: true}
+                            }
+                        },
+                        calculable: true,
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: ['江苏', '浙江', '上海']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '接收',
+                                type: 'bar',
+                                data: [{{ JS_Money_Get }}, {{ ZJ_Money_Get }}, {{ SH_Money_Get }}],
+                                markPoint: {
+                                    data: [
+                                        {type: 'max', name: '最大值'},
+                                        {type: 'min', name: '最小值'}
+                                    ]
+                                },
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            },
+                            {
+                                name: '发放',
+                                type: 'bar',
+                                data: [{{ JS_Money_Out }}, {{ ZJ_Money_Out }}, {{ SH_Money_Out }}],
+
+                                markLine: {
+                                    data: [
+                                        {type: 'average', name: '平均值'}
+                                    ]
+                                }
+                            }
+                        ]
+                    };
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                </script>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="panel-default">
+                    <div class="panel-heading">
+                        <h3>用户登录信息</h3>
+                        <br>
+                        <table id="UserInfo" class="table-hover table-striped">
+                            <thead>
+                            <th>编号</th>
+                            <th>用户名</th>
+                            <th>最近登录时间</th>
+                            </thead>
+                            <tbody>
+                            {% for info in informationtable %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ info.username }}</td>
+                                    <td>{{ info.last_login }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

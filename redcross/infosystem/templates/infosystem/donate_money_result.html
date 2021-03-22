@@ -1,0 +1,265 @@
+<!-- 8.3更新 -->
+{# 增加了跳转页码的js，form的method由post改为get #}
+{# 后端需要多传一个参数 totalPages 内容为全部页数 #}
+{# 86行需要配置原56行的action函数 #}
+
+<!--6月-->
+{# 56行：action后配置对应函数 #}
+{# 后端传参缺少内容：'dis_search_head'、'dis_search'、'begin_date','end_date','min_quantity','end_quantity','sortkey'#}
+{# 疑问：当前逻辑是否能实现传空 = 不设置条件查询？ #}
+
+{% extends "base.html" %}
+{% block title %}
+    <title>红十字会数据管理｜款项受赠情况查询</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+
+        #form-container {
+            margin-top: 15px;
+        }
+
+        button {
+            font-size: 50px;
+            color: #2E2E2E;
+
+        }
+
+        .conditons label {
+            font-size: 20px;
+        }
+
+        .conditons input, select {
+            width: 210px;
+            height: 30px;
+        }
+    .display_result{
+        overflow: auto;
+        height: 60px;
+        {#width: 220px;#}
+    }
+
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    <script>
+        {# 根据输入页码跳转 #}
+
+        function updateURL(value) {
+                var nURL = window.location.href.toString();
+                if (value) {
+                    var re = new RegExp("([?&])" + "page" + "=.*?(&|$)", "i");
+                    var separator = nURL.indexOf('?') !== -1 ? "&" : "?";
+
+                    {# 符合正则表达式，更改页码 #}
+                    if (nURL.match(re)) {
+                        nURL = nURL.replace(re, '$1' + "page=" + value + '&');
+                    }
+                        {# 不符合，追加?page=value或&page=value #}
+                    else nURL = nURL + separator + "page=" + value;
+                }
+                window.location.href = nURL;
+                window.event.returnValue = false;
+
+        }
+
+        function page_jump() {
+            var value = document.getElementById("which_page").value;
+            if(Math.floor(value)==value && value > 0 && value <= {{ totalPages }}){
+                updateURL(value);
+            }
+            else {
+                alert("页码无效！");
+            }
+        }
+
+        function setSelectOption(selectID, checkValue){
+           const select = document.getElementById(selectID);
+           for (var i = 0; i< select.options.length; i++) {
+                if (select.options[i].value == checkValue) {
+                    select.options[i].selected = true;
+                    break;
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    <!--查询表头-->
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" id="form-container">
+                <div class="panel panel-default" id="myPanel">
+                    <div class="panel-heading" style="background-color: #ffffff">
+                        <h1>款项受赠情况查询</h1>
+                    </div>
+                    <div class="panel-body" style="background-color: #ffffff">
+                        <!--action后引号内填入对应函数-->
+                        <form action="{% url 'infosystem:donate_money_result' %}" method="GET">
+                            {% csrf_token %}
+                            <div class="conditions">
+                                <div class="col-lg-3">
+                                    <label for="province">省份</label><br>
+                                    <select class="form-group" id="province" type="text" name="province">
+                                        <option></option>
+                                        <option value="江苏">江苏</option>
+                                        <option value="浙江">浙江</option>
+                                        <option value="上海">上海</option>
+                                    </select>
+                                    <script>
+                                         setSelectOption('province', '{{ province }}')
+                                    </script>
+                                </div>
+
+
+                                <div class="col-lg-3">
+                                    <label for="org_name">捐赠方</label><br>
+                                    <input class="form-group" type="text" id="org_name" name="org_name"
+                                           placeholder="捐赠方"
+                                           value="{{ org_name }}">
+                                </div>
+
+
+                                <div class="col-lg-3">
+                                    <label for="intention">定向名称</label><br>
+                                    <input class="form-group" type="text" id="intention" name="intention"
+                                           placeholder="定向名称"
+                                           value="{{ intention }}">
+                                </div>
+                                <div class="col-lg-3">
+                                    <label for="province">排序关键词</label><br>
+                                    <select class="form-group" id="sortkey" type="text" name="sortkey">
+                                        <option>捐赠方</option>
+                                        <option>省份</option>
+                                        <option>日期</option>
+                                        <option>数量</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label for="begin_date" for="end_date">起始日期 - 终止日期</label><br>
+                                    <input class="form-group" type="date" id="begin_date" name="begin_date"
+                                           placeholder="起始日期"
+                                           value="{{ begin_date }}">
+                                    -
+                                    <input class="form-group" type="date" id="end_date" name="end_date"
+                                           placeholder="终止日期"
+                                           value="{{ end_date }}">
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label for="min_quantity" for="max_quantity">最低金额 - 最高金额</label><br>
+
+                                    <input class="form-group" type="text" id="min_quantity" name="min_quantity"
+                                           placeholder="最低金额"
+                                           value="{{ min_quantity }}">
+                                    -
+                                    <input class="form-group" type="text" id="max_quantity" name="max_quantity"
+                                           placeholder="最高金额"
+                                           value="{{ max_quantity }}">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <br>
+                                <button class="btn btn-block btn-lg" type="ssubmit">查询</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+
+    <!--查询结果-->
+    <div class="container" id="result">
+        <div class="panel panel-default" id="display_panel">
+            <!--标题-->
+            <div class="panel-heading" style="background-color: #f5f5f5">
+                <h1>查询结果</h1>
+                <!--总数目-->
+                <h4 style="font-style: italic;color:#808080"> -共 {{ total_num }} 条记录，按照"{{ sortkey }}"排序</h4>
+            </div>
+
+            <!--导航栏-->
+            <div class="panel-body" style="background-color: #f5f5f5">
+                <div class="search_head" id="search_head" style="display: {{ dis_search_head }}">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <button class="col-lg-2 btn btn-inverse" disabled>省份</button>
+                            <button class="col-lg-3 btn btn-inverse" disabled>捐赠方</button>
+                            <button class="col-lg-3 btn btn-inverse" disabled>定向项目</button>
+                            <button class="col-lg-2 btn btn-inverse" disabled>日期</button>
+                            <button class="col-lg-2 btn btn-inverse" disabled>金额</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--查找失败-->
+            <div class="panel-body display_atrr" style="background-color: #f5f5f5">
+                <div class="alert" id="search_failure" style=" display: {{ dis_search_failure }}">
+                    <p>暂无记录</p>
+                </div>
+            </div>
+
+            <div class="text-center display_atrr" id="result">
+                <!--分页展示信息-->
+                {% for item in contacts %}
+                    <div class="display_result col-lg-2">{{ item.province }}</div>
+                    <div class="display_result col-lg-3">{{ item.org_name }}</div>
+                    <div class="display_result col-lg-3">{{ item.intention }}</div>
+                    <div class="display_result col-lg-2">{{ item.date }}</div>
+                    <div class="display_result col-lg-2">{{ item.quantity }}</div>
+                {% endfor %}
+                <br>
+
+                <div>
+                    <nav>
+                        <ul class="pagination">
+
+                            {% if contacts.has_previous %}
+                                <li>
+                                    <a href onclick="updateURL({{ contacts.previous_page_number }})"
+                                       aria-label="Previous"><span aria-hidden="true">&laquo</span></a>
+                                </li>
+                            {% endif %}
+                            {% if contacts.number > 0 %}
+                                <li>
+                                    <span>第&nbsp;{{ contacts.number }} &nbsp; 页 / 共 {{ totalPages }} 页</span>
+                                </li>
+                            {% endif %}
+                            {% if contacts.has_next %}
+                                <li>
+                                    <a href onclick="updateURL({{ contacts.next_page_number }})" aria-label="Next"><span
+                                            aria-hidden="true">&raquo;</span></a>
+                                </li>
+
+                                <li>
+                                    <input id="which_page" type="text" value="输入页码"
+                                           onfocus="if(this.value=='输入页码')this.value=''"/>
+                                    <input class="button" id="go_page" value="跳转" onclick="page_jump()">
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}

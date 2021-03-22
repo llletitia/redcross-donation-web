@@ -1,0 +1,114 @@
+<!--资源发放页面1-->
+{# 41 - action后配函数 #}
+
+
+{% extends "base.html" %}
+{% block title %}
+    <title>红十字会数据管理｜资源发放情况查询</title>
+{% endblock %}
+
+{% block style %}
+    <style>
+
+        #form-container {
+            margin-top: 15px;
+        }
+
+        button {
+            font-size: 50px;
+            color: #2E2E2E;
+
+        }
+        .form-group{
+               height: 30px;
+            }
+
+
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12" id="form-container">
+                <div class="panel panel-default" id="myPanel">
+                    <div class="panel-heading" style="background-color: #ffffff">
+                        <h1>物资发放情况查询</h1>
+                    </div>
+                    <div class="panel-body" style="background-color: #ffffff">
+                        <!--action后引号内填入对应函数-->
+                        <form action="" method="GET">
+                            {% csrf_token %}
+                            <div class="conditions">
+                                <div class="col-lg-3">
+                                    <label for="province">省份</label><br>
+                                    <select class="form-group" id="province" type="text" name="province">
+                                        <option></option>
+                                        <option>江苏</option>
+                                        <option>浙江</option>
+                                        <option>上海</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-lg-3 col-lg-offset-1">
+                                    <label for="org_name">捐赠方</label><br>
+                                    <input class="form-group" type="text" id="org_name" name="org_name"
+                                           placeholder="捐赠方">
+                                </div>
+
+
+
+                                 <div class="col-lg-3 col-lg-offset-1">
+                                     <label for="province">排序关键词</label><br>
+                                    <select class="form-group" id="sortkey" type="text"  name="sortkey">
+                                        <option>物资名称</option>
+                                        <option>捐赠方</option>
+                                        <option>省份</option>
+                                        <option>日期</option>
+                                        <option>数量</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <label for="res_name">物资名称</label><br>
+                                    <input class="form-group" type="text" id="res_name" name="res_name" placeholder="物资名称" style="width: 65.5%;">
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label for="begin_date" for="end_date">起始日期 - 终止日期</label><br>
+                                    <input class="form-group" type="date" id="begin_date" name="begin_date"
+                                           placeholder="起始日期">
+                                    -
+                                    <input class="form-group" type="date" id="end_date" name="end_date"
+                                           placeholder="终止日期">
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label for="min_quantity" for="max_quantity">最低数量 - 最高数量</label><br>
+
+                                    <input class="form-group" type="number" id="min_quantity" name="min_quantity"
+                                           placeholder="最低数量">
+                                    -
+                                    <input class="form-group" type="number" id="max_quantity" name="max_quantity"
+                                           placeholder="最高数量">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <br>
+                                <!--href后的#改为结果页的url-->
+                                <button class="btn btn-block btn-lg" type="submit">查询</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>红十字会数据管理系统｜个人中心</title>
+{% endblock %}
+{% block style %}
+    <style>
+        #Userinfo label {
+            font-size: 24px;
+
+        }
+
+        #Userinfo p {
+            font-size: 24px;
+            font-family: sans-serif;
+            font-style: italic;
+        }
+
+        #panel_container {
+            margin-top: 15px;
+        }
+
+        a:link, a:visited {
+            color: black;
+            text-decoration: none;
+        }
+
+        button {
+            height: 60px;
+            font-size: 50px;
+            color: #2E2E2E;
+
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div id="panel_container" class="panel-default" style="background-color: #ffffff">
+                    <!--标题：用户信息-->
+                    <div class="panel-heading" style="background-color: #ffffff">
+                        <h1>用户信息</h1>
+                    </div>
+
+                    <!--内容：用户信息-->
+                    <div class="panel-body" style="background-color: #ffffff">
+                        <!--用户名-->
+                        <div id="Userinfo">
+                            <div>
+                                <label for="username" style="font-size: 24px;">用户名 / Username</label>
+                                <p id="username">{{ username }}</p>
+                            </div>
+                            <br>
+
+                            <!--邮箱-->
+                            <div>
+                                <label for="user_email" style="font-size: 24px;">电子邮箱 / Email</label>
+                                <p id="user_email">{{ user_email }}</p>
+                            </div>
+                            <br>
+
+                            <!--最近登录时间-->
+                            <div>
+                                <label for="login_time" style="font-size: 24px;">最近登录时间 / Login Time</label>
+                                <p id="login_time">{{ login_time }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--修改信息入口按钮-->
+                    <div class="panel-body" style="background-color: #ffffff">
+                        <a href="{% url 'infosystem:edit_info' %}"></a>
+                    </div>
+                    <!--href="#"中的#改成修改页面对应urk-->
+                    <a href="{% url 'infosystem:edit_info' %}">
+                        <button class="btn btn-block btn-lg" type="button">编辑个人信息 / Edit</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
